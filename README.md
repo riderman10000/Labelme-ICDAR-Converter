@@ -12,6 +12,7 @@ Additionally, in order to view the result in Labelme as well as the correct outp
 
 
 ## To Use
+Make three empty folder named json, txt, img+txt. 
 
 For .json to .txt conversion put .json file in json directory,
 the output will be saved in txt directory.
