@@ -11,7 +11,7 @@ Additionally, in order to view the result in Labelme as well as the correct outp
 
 
 
-## Deployment
+## To Use
 
 For .json to .txt conversion put .json file in json directory,
 the output will be saved in txt directory.
