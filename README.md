@@ -26,6 +26,9 @@ For .txt to .json conversion put image and text file in img+txt directory, the o
   python txt2json.py
 ```
 
+## Not Supported
+
+.txt to .json won't work for labels more that 5. Only upto 5 labels will be saved.
 
 ## If this repository helps you，please star it. Thanks.
 
