@@ -1,50 +1,54 @@
-##################### imports ########################
-
-import json
-import os
-import argparse
+import os 
+import json 
 import sys
+import argparse
 
-########## cli document ############
-parser=argparse.ArgumentParser()
-parser.add_argument('--text_dir=',type=str)
-parser.add_argument('--json_dir=',type=str)
-args=parser.parse_args()
+json_dict = {
+    'version': '5.1.1',
+    'flags': {},
+    'shapes': [],
+    'imagePath': 0,
+    'imageData': 0,
+    'imageHeight': 0,
+    'imageWidth': 0,
+}
 
-json_dir=vars(args)['json_dir=']
-txt_dir=vars(args)['text_dir=']
+label_dict = { # shapes
+    'label': "",
+    'points': [],
+    'group_id': None,
+    'description': None,
+    'shape_type': 'polygon',
+    'flags': {}
+}
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--json-dir', '-j',  type=str, help='path to directory where the json files are presented')
+parser.add_argument('--text-dir', '-t', type=str, help='path to directory to save the generated text files')
+args = parser.parse_args()
+
+txt_dir = vars(args)['text_dir']
+json_dir = vars(args)['json_dir']
 
 
-################### directories #####################
-# json_dir='C:/innate2/ocrUnilever/det_db/outtxt/'
-# txt_dir='C:/innate2/ocrUnilever/det_db/img+txtuni/'
+for file in os.listdir(json_dir):
+    if '.json' in file:
+        with open(os.path.join(json_dir, file)) as json_file:
+            print('[+] Txt file of ', file)
+            image_json_info = json.load(json_file)
+            labels = []
+            for label_shape_dict in image_json_info['shapes']:
+                # print(label_shape_dict)
+                label, xycoordinates = label_shape_dict['label'], label_shape_dict['points']
+                points = []
+                points_str = ''
+                for x,y in xycoordinates:
+                    points_str += str(int(x)) +', '+str(int(y)) + ', ' # add as such because the format looks like: x1, y1, x2, y2, x3, y3, x4, y4 ..., label_name
+                txt_lable_point_str = points_str + label +'\n'
+                labels.append(txt_lable_point_str)
+                # print(label, points, '\n', points_str)
+            with open(os.path.join(txt_dir, file.replace('.json', '.txt')), 'w+') as txt_file:
+                for label in labels:
+                    txt_file.write(label)
 
-################################ Conversion ###############
-print("Started!!!!!!!!")
-u=0
-for filename in os.listdir(json_dir):
-
-    g = os.path.join(json_dir, filename)
-    if os.path.isfile(g):
-        if '.json' in g:
-            f=open(g)
-            data = json.load(f)
-            for i in range(0,len(data['shapes'])):
-                points_list=[]
-                for j in range(0,4):
-                    for k in range(0,2):
-                        points_list.append(int(data['shapes'][i]['points'][j][k]))
-                points_list.append(data['shapes'][i]['label'])
-                
-                a=str(points_list).replace('[','')
-                b=str(a).replace(']','')
-                points_str=str(b).replace("'","")
-                json_name=g.replace(json_dir,'')
-                txt_name=json_name.replace('.json','.txt')
-                f=open(txt_dir+txt_name,'a')
-                f.write(str(points_str))
-                f.write('\n')
-                f.close()
-            u=u+1
-            print("Number of conversion completed: ",u)
-print("COMPLETED")
+print('[+] Done Converting')
