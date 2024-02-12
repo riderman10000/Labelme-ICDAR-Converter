@@ -4,6 +4,7 @@ import labelme
 import base64
 import json 
 import argparse 
+from itertools import permutations 
 
 json_dict = {
     'version': '5.1.1',
@@ -23,16 +24,35 @@ label_dict = {
     'shape_type': 'polygon',
     'flags': {}
 }
-
 parser = argparse.ArgumentParser()
-parser.add_argument('--image-dir', '-i', type=str, help='path to directory where the image files are presented')
-parser.add_argument('--text-dir', '-t', type=str, help='path to directory where the text files are presented')
-parser.add_argument('--json-dir', '-j', type=str, help='path to directory to save the generated json files')
+parser.add_argument('--image-dir', '-i', type=str, help='path to directory where the image files are presented', default=None)
+parser.add_argument('--text-dir', '-t', type=str, help='path to directory where the text files are presented', default=None)
+parser.add_argument('--json-dir', '-j', type=str, help='path to directory to save the generated json files', default=None)
+parser.add_argument(*list(map(lambda x: '-' +''.join(x), permutations('it'))), dest='image_text_dir',type=str, help='combined path of image and text', default=None)
+parser.add_argument(*list(map(lambda x: '-' +''.join(x), permutations('jt'))), dest='json_text_dir',type=str, help='combined path of json and text', default=None)
+parser.add_argument(*list(map(lambda x: '-' +''.join(x), permutations('ji'))), dest='json_image_dir',type=str, help='combined path of image and json', default=None)
+parser.add_argument(*list(map(lambda x: '-' +''.join(x), permutations('itj'))), dest='image_text_json_dir',type=str, help='combined path of image, text, and json', default=None)
+
+parser.add_argument('--verbose', '-v', action='store_true')
 args = parser.parse_args()
 
 image_dir = vars(args)['image_dir']
 txt_dir = vars(args)['text_dir']
 json_dir = vars(args)['json_dir']
+verbose = vars(args)['verbose']
+image_text_dir = vars(args)['image_text_dir']
+json_text_dir = vars(args)['json_text_dir']
+json_image_dir = vars(args)['json_image_dir']
+image_text_json_dir = vars(args)['image_text_json_dir']
+
+if image_text_dir:
+    image_dir = txt_dir = image_text_dir
+if json_text_dir:
+    json_dir = txt_dir = json_text_dir
+if json_image_dir:
+    json_dir = image_dir = json_image_dir
+if image_text_json_dir:
+    image_dir = txt_dir = json_dir = image_text_json_dir
 
 for file in os.listdir(txt_dir):
     if '.txt' in file:
