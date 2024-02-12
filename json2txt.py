@@ -26,7 +26,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--json-dir', '-j',  type=str, help='path to directory where the json files are presented')
 parser.add_argument('--text-dir', '-t', type=str, help='path to directory to save the generated text files')
 args = parser.parse_args()
-
+print(args._get_kwargs())
 txt_dir = vars(args)['text_dir']
 json_dir = vars(args)['json_dir']
 
