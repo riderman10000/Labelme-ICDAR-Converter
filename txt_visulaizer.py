@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 import argparse
 import textwrap
-
+from itertools import permutations
 
 parser = argparse.ArgumentParser(epilog=textwrap.dedent(
     '''
@@ -12,11 +12,16 @@ parser = argparse.ArgumentParser(epilog=textwrap.dedent(
     '''))
 parser.add_argument('--image-dir', '-i', type=str, help='path to image directory')
 parser.add_argument('--text-dir', '-t', type=str, help='path to text directory of labels')
+parser.add_argument(*list(map(lambda x: '-' + ''.join(x), permutations('jt'))), dest='image_text_dir', type=str, help='if same directory of both json and text', default=None)
+
 parser.add_help = True
 args = parser.parse_args()
 
 image_dir = vars(args)['image_dir']
 txt_dir = vars(args)['text_dir']
+image_text_dir = vars(args)['image_text_dir']
+if image_text_dir:
+    image_dir = txt_dir = image_text_dir 
 
 for file in os.listdir(txt_dir):
     if '.txt' in file:

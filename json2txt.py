@@ -26,7 +26,7 @@ label_dict = { # shapes
 parser = argparse.ArgumentParser()
 parser.add_argument('--json-dir', '-j',  type=str, help='path to directory where the json files are presented')
 parser.add_argument('--text-dir', '-t', type=str, help='path to directory to save the generated text files')
-parser.add_argument(*list(map(lambda x: '-' + ''.join(x), 'jt')), dest='json_text_dir', type=str, help='if same directory of both json and text', default=None)
+parser.add_argument(*list(map(lambda x: '-' + ''.join(x), permutations('jt'))), dest='json_text_dir', type=str, help='if same directory of both json and text', default=None)
 parser.add_argument('--verbose', '-v', action='store_true', help='flag to enable process descriptions')
 
 args = parser.parse_args()
