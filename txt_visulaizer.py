@@ -12,7 +12,7 @@ parser = argparse.ArgumentParser(epilog=textwrap.dedent(
     '''))
 parser.add_argument('--image-dir', '-i', type=str, help='path to image directory')
 parser.add_argument('--text-dir', '-t', type=str, help='path to text directory of labels')
-parser.add_argument(*list(map(lambda x: '-' + ''.join(x), permutations('jt'))), dest='image_text_dir', type=str, help='if same directory of both json and text', default=None)
+parser.add_argument(*list(map(lambda x: '-' + ''.join(x), permutations('it'))), dest='image_text_dir', type=str, help='if same directory of both image and text', default=None)
 
 parser.add_help = True
 args = parser.parse_args()
@@ -47,6 +47,6 @@ for file in os.listdir(txt_dir):
                 for i, label in enumerate(polygons.keys()):
                     image = cv2.polylines(image, [polygons[label]], isClosed=True, color=(255 * (i == 0)  , 255 * (i == 1), 255 * (i == 2)), thickness= 2)
                 cv2.imshow(file, image)
-                if cv2.waitKey(2000) & 0xFF == 27:
+                if cv2.waitKey(0) & 0xFF == 27:
                     exit()
                 cv2.destroyAllWindows()
